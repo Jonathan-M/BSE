@@ -1,0 +1,257 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Bse by Jonathan-M</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="without-description">
+        <h1>Bse</h1>
+        <p></p>
+        <p class="view"><a href="https://github.com/Jonathan-M/BSE">View the Project on GitHub <small>Jonathan-M/BSE</small></a></p>
+        <ul>
+          <li><a href="https://github.com/Jonathan-M/BSE/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Jonathan-M/BSE/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Jonathan-M/BSE">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>`#include </p>
+
+<h1>
+<a id="include-" class="anchor" href="#include-" aria-hidden="true"><span class="octicon octicon-link"></span></a>include </h1>
+
+<h1>
+<a id="include--1" class="anchor" href="#include--1" aria-hidden="true"><span class="octicon octicon-link"></span></a>include </h1>
+
+<h1>
+<a id="include-utilityadafruit_pwmservodriverh" class="anchor" href="#include-utilityadafruit_pwmservodriverh" aria-hidden="true"><span class="octicon octicon-link"></span></a>include "utility/Adafruit_PWMServoDriver.h"</h1>
+
+<h1>
+<a id="include--2" class="anchor" href="#include--2" aria-hidden="true"><span class="octicon octicon-link"></span></a>include </h1>
+
+<p>Servo myservo;
+Adafruit_MotorShield AFMS = Adafruit_MotorShield();</p>
+
+<p>PS2X ps2x;</p>
+
+<p>Adafruit_DCMotor *RightMotor = AFMS.getMotor(1);
+Adafruit_DCMotor *LeftMotor = AFMS.getMotor(2);
+//
+//int BackUpBeeper = 6;</p>
+
+<p>float pos = 90;
+int laserState = LOW;
+long interval = 500;
+int beeperState = LOW;
+long previousMillis = 0; 
+const int beeperPin =  6;
+int laserPin = 2;  </p>
+
+<p>int horn = 5;
+int error = 0;
+bool lmotorf = false;
+bool rmotorf = false;
+bool rmotorb = false;
+bool lmotorb = false;
+byte type = 0;
+byte vibrate = 0;</p>
+
+<p>void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  //pinMode(BackUpBeeper, OUTPUT);
+//attachInterrupt(0, backup, CHANGE);
+  AFMS.begin();
+  myservo.attach(3);
+//digitalWrite(BackUpBeeper, LOW);
+pinMode(beeperPin, OUTPUT);
+pinMode(laserPin, OUTPUT);
+//pinMode(1, OUTPUT);</p>
+
+<p>error = ps2x.config_gamepad(13, 9, 10, 12, true, true); //setup pins and settings:  GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error</p>
+
+<p>if (error == 0)
+  {
+    Serial.println("Found Controller, configured successful");
+    Serial.println("Try out all the buttons, X will vibrate the controller, faster as you press harder;");
+    Serial.println("holding L1 or R1 will print out the analog stick values.");
+    Serial.println("Go to <a href="http://www.billporter.info">www.billporter.info</a> for updates and to report bugs.");
+  }
+  else if (error == 1)
+  {
+    Serial.println("No controller found, check wiring, see readme.txt to enable debug. visit <a href="http://www.billporter.info">www.billporter.info</a> for troubleshooting tips");
+  }
+  else if (error == 2)
+  {
+    Serial.println("Controller found but not accepting commands. see readme.txt to enable debug. Visit <a href="http://www.billporter.info">www.billporter.info</a> for troubleshooting tips");
+  }
+  else if (error == 3)
+  {
+    Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
+  }</p>
+
+<p>type = ps2x.readType();
+  if (type != 1)
+  {
+    Serial.println("warning: DualShock Controller Not Found!");
+  }
+}</p>
+
+<p>void loop() {
+  // put your main code here, to run repeatedly:
+unsigned long currentMillis = millis();
+//digitalWrite(1, HIGH);</p>
+
+<p>if (ps2x.Button(PSB_L1)){
+  Serial.println("Laser Left just pressed");
+  if (pos &lt; 170) {
+    pos += .75; // goes from 0 degrees to 180 degrees  in steps of 1 degree 
+    myservo.write(pos);              // tell servo to go to positio0n in variable 'pos' 
+  }
+}
+ if (ps2x.Button(PSB_R1)) {
+  Serial.println("Laser Right just pressed");
+  if (pos &gt; 10) {
+    pos -=.75;
+    myservo.write(pos);
+  }
+ }</p>
+
+<p>if(ps2x.ButtonPressed(PSB_PINK)) { 
+  Serial.println("Pink just pressed");</p>
+
+<p>if (laserState == LOW) {
+      laserState = HIGH;
+         }
+    else {
+     laserState = LOW;
+    }
+    digitalWrite(laserPin, laserState);
+}</p>
+
+<p>if (lmotorf) {</p>
+
+<pre><code>LeftMotor-&gt;run(BACKWARD);
+LeftMotor-&gt;setSpeed(255);
+</code></pre>
+
+<p>}
+  else if (lmotorb) {
+    LeftMotor-&gt;run(FORWARD);
+    LeftMotor-&gt;setSpeed(255);
+  }
+  else {
+    LeftMotor-&gt;setSpeed(0);
+}</p>
+
+<p>if (rmotorf) {</p>
+
+<pre><code>RightMotor-&gt;run(FORWARD);
+RightMotor-&gt;setSpeed(255);
+</code></pre>
+
+<p>}
+  else if (rmotorb) {
+    RightMotor-&gt;run(BACKWARD);
+    RightMotor-&gt;setSpeed(255);
+  }
+  else {
+    RightMotor-&gt;setSpeed(0);</p>
+
+<p>}</p>
+
+<p>if (error == 1) //skip loop if no controller found
+    return;
+  if (type == 1)
+  {
+    ps2x.read_gamepad(false, vibrate);
+    //if (ps2x.NewButtonState())               //will be TRUE if any button changes state (on to off, or off to on)
+    //{</p>
+
+<p>vibrate = ps2x.Analog(PSAB_RED);
+    if(ps2x.Button(PSB_RED))    {<br>
+         Serial.println("Circle just pressed");
+         analogWrite(horn, 130);
+    }
+    else {
+      analogWrite(horn, 0);
+    }</p>
+
+<pre><code>if (ps2x.Button(PSB_L2)) {
+  Serial.println("L2 pressed");
+  RightMotor-&gt;run(BACKWARD);
+  RightMotor-&gt;setSpeed(255);
+}
+if (ps2x.Button(PSB_R2)) {
+  Serial.println("R2 pressed");
+  LeftMotor-&gt;run(FORWARD);
+  LeftMotor-&gt;setSpeed(255);
+}
+if (ps2x.Button(PSB_GREEN)) {
+  Serial.println("Triangle pressed");
+  LeftMotor-&gt;run(BACKWARD);
+  LeftMotor-&gt;setSpeed(255);
+}
+
+// }
+
+
+
+if (ps2x.Button(PSB_PAD_UP)) {
+  Serial.println("UP Just pressed");
+  RightMotor-&gt;run(FORWARD);
+  RightMotor-&gt;setSpeed(255);
+}
+
+
+ if (ps2x.Button(PSB_GREEN)) {
+   if (ps2x.Button(PSB_PAD_UP)) {
+     if(currentMillis - previousMillis &gt; interval) {
+  // save the last time you blinked the LED 
+  previousMillis = currentMillis; 
+
+  if (beeperState == LOW) {
+  beeperState = HIGH;
+     }
+else {
+ beeperState = LOW;
+}
+    // set the LED with the ledState of the variable:
+digitalWrite(beeperPin, beeperState);
+   }
+ }
+}
+</code></pre>
+
+<p>if (!ps2x.Button(PSB_GREEN)) {
+  if (!ps2x.Button(PSB_PAD_UP)) {
+    beeperState = LOW;
+    digitalWrite(beeperPin, LOW);
+  }
+}</p>
+
+<p>}
+  delay(50);
+}`</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/Jonathan-M">Jonathan-M</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
